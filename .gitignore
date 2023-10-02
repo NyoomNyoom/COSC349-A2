@@ -11,3 +11,5 @@
 .vagrant/rgloader/loader.rb
 .vagrant/tf-deploy/.terraform.lock.hcl
 .vagrant/tf-deploy/.terraform/providers/registry.terraform.io/hashicorp/aws/5.19.0/linux_amd64/terraform-provider-aws_v5.19.0_x5
+tf-deploy/.terraform.lock.hcl
+tf-deploy/.terraform/providers/registry.terraform.io/hashicorp/aws/5.19.0/linux_amd64/terraform-provider-aws_v5.19.0_x5
