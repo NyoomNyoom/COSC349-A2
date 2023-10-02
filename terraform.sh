@@ -13,7 +13,10 @@ export LC_ALL="en_US.UTF-8"
 pip3 install boto3
 pip3 install --upgrade awscli
 
+
+
 #Copying the AWS credentials to the vagrant user
+mkdir ~/.aws
 cp /vagrant/credentials.txt ~/.aws/credentials
 
 #Running terraform using the main.tf file in the tf-deploy folder.
