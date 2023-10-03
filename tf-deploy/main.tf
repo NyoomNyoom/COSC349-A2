@@ -98,6 +98,7 @@ resource "aws_db_instance" "LollystoreDB" {
     username             = "admin"
     password             = "password"
     parameter_group_name = "default.mysql5.7"
+    db_name              = "LollyStore"
     publicly_accessible = true
     skip_final_snapshot = true
 }
@@ -107,9 +108,6 @@ output "web_server_ip" {
 }
 output "admin_server_ip" {
   value = aws_instance.Admin_server.public_ip
-}
-output "db_server_ip" {
-  value = aws_db_instance.db_server.address
 }
 
 output "db_host" {
@@ -121,7 +119,7 @@ output "db_port" {
 }
 
 output "db_name" {
-  value = aws_db_instance.LollystoreDB.name
+  value = aws_db_instance.LollystoreDB.db_name
 }
 
 output "db_user" {
@@ -131,6 +129,3 @@ output "db_user" {
 output "db_pass" {
   value = aws_db_instance.LollystoreDB.password
 }
-
-
-```
