@@ -53,7 +53,7 @@ resource "aws_security_group" "allow_mysql" {
 resource "aws_instance" "web_server" {
   ami           = "ami-010e83f579f15bba0"
   instance_type = "t2.micro"
-  key_name      = "assignment-key"
+  key_name      = "assignment-key3"
 
   vpc_security_group_ids = [aws_security_group.allow_sshANDhttp.id]
 
@@ -73,7 +73,7 @@ resource "aws_instance" "web_server" {
 resource "aws_instance" "Admin_server" {
     ami           = "ami-010e83f579f15bba0"
     instance_type = "t2.micro"
-    key_name      = "assignment-key"
+    key_name      = "assignment-key3"
     
     vpc_security_group_ids = [aws_security_group.allow_sshANDhttp.id]
     
@@ -128,4 +128,5 @@ output "db_user" {
 
 output "db_pass" {
   value = aws_db_instance.LollystoreDB.password
+  sensitive = true
 }

@@ -24,20 +24,31 @@ cd /vagrant/tf-deploy
 terraform init
 terraform apply -auto-approve
 
+sudo -s
+
+mkdir /.ssh
+
 #Copying the private key to the vagrant user
-cp /vagrant/assignment-key.pem ~/.ssh/assignment-key.pem
+cp /vagrant/assignment-key3.pem /.ssh/assignment-key3.pem
 
 #Setting up the private key to be used by the vagrant user
-chmod 700 ~/.ssh/assignment-key.pem
+chmod 700 /.ssh/assignment-key3.pem
 
-cd ..
+cd /vagrant/tf-deploy
+echo "making the ubuntu user own the /var/www folder"
+ssh -i /.ssh/assignment-key3.pem -o StrictHostKeyChecking=no ubuntu@$(terraform output -raw web_server_ip) "sudo chown -R ubuntu:root /var/www"
+ssh -i /.ssh/assignment-key3.pem -o StrictHostKeyChecking=no ubuntu@$(terraform output -raw admin_server_ip) "sudo chown -R ubuntu:root /var/www"
 
 #Copying the files to the web servers using secure copy.
 #The terraform output grabs the output ip address of the webserver.
-scp -i ~/.ssh/assignment-key.pem -r /vagrant/store-web-files ubuntu@$(terraform output -raw web_server_ip):/var/www
-scp -i ~/.ssh/assignment-key.pem -r /vagrant/admin-web-files ubuntu@$(terraform output -raw admin_server_ip):/var/www
+echo "copying the files to the web servers"
+scp -i /.ssh/assignment-key3.pem -o StrictHostKeyChecking=no -r /vagrant/store-web-files ubuntu@$(terraform output -raw web_server_ip):/var/www
+scp -i /.ssh/assignment-key3.pem -o StrictHostKeyChecking=no -r /vagrant/admin-web-files ubuntu@$(terraform output -raw admin_server_ip):/var/www
+
+echo "after changes"
 
 cd /vagrant
+
 cat > /vagrant/web.conf << EOF
 <VirtualHost *:80>
     ServerAdmin webmaster@localhost
@@ -62,21 +73,33 @@ cat > /vagrant/admin.conf << EOF
 </VirtualHost>
 EOF
 
+cd /vagrant/tf-deploy
+
 #Copying the config files to the web servers using secure copy.
-scp -i ~/.ssh/assignment-key.pem -r /vagrant/web.conf ubuntu@$(terraform output -raw web_server_ip):/etc/apache2/sites-available/
-scp -i ~/.ssh/assignment-key.pem -r /vagrant/admin.conf ubuntu@$(terraform output -raw admin_server_ip):/etc/apache2/sites-available/
+ssh -i /.ssh/assignment-key3.pem ubuntu@$(terraform output -raw web_server_ip) "sudo chown -R ubuntu:root /etc/apache2/sites-available"
+ssh -i /.ssh/assignment-key3.pem ubuntu@$(terraform output -raw admin_server_ip) "sudo chown -R ubuntu:root /etc/apache2/sites-available"
+scp -i /.ssh/assignment-key3.pem -r /vagrant/web.conf ubuntu@$(terraform output -raw web_server_ip):/etc/apache2/sites-available
+scp -i /.ssh/assignment-key3.pem -r /vagrant/admin.conf ubuntu@$(terraform output -raw admin_server_ip):/etc/apache2/sites-available
+
+#Changing the ownership of the config files on the web servers
+ssh -i /.ssh/assignment-key3.pem ubuntu@$(terraform output -raw web_server_ip) "sudo chown -R root:ubuntu /etc/apache2/sites-available"
+ssh -i /.ssh/assignment-key3.pem ubuntu@$(terraform output -raw admin_server_ip) "sudo chown -R root:ubuntu /etc/apache2/sites-available"
 
 #enabling the config files on the web servers
-ssh -i ~/.ssh/assignment-key.pem ubuntu@$(terraform output -raw web_server_ip) "sudo a2ensite web.conf"
-ssh -i ~/.ssh/assignment-key.pem ubuntu@$(terraform output -raw admin_server_ip) "sudo a2ensite admin.conf"
+ssh -i /.ssh/assignment-key3.pem ubuntu@$(terraform output -raw web_server_ip) "sudo a2ensite web.conf"
+ssh -i /.ssh/assignment-key3.pem ubuntu@$(terraform output -raw admin_server_ip) "sudo a2ensite admin.conf"
 
-ssh -i ~/.ssh/assignment-key.pem ubuntu@$(terraform output -raw web_server_ip) "sudo a2dissite 000-default"
-ssh -i ~/.ssh/assignment-key.pem ubuntu@$(terraform output -raw admin_server_ip) "sudo a2dissite 000-default"
+#disabling the default config files on the web servers
+ssh -i /.ssh/assignment-key3.pem ubuntu@$(terraform output -raw web_server_ip) "sudo a2dissite 000-default"
+ssh -i /.ssh/assignment-key3.pem ubuntu@$(terraform output -raw admin_server_ip) "sudo a2dissite 000-default"
 
-scp -i ~/.ssh/assignment-key.pem -r /vagrant/web.conf ubuntu@$(terraform output -raw web_server_ip):/var/www
-scp -i ~/.ssh/assignment-key.pem -r /vagrant/admin.conf ubuntu@$(terraform output -raw admin_server_ip):/var/www
+echo "copying the website conf files"
+#Copying the config files to the web servers using secure copy.
+scp -i /.ssh/assignment-key3.pem -r /vagrant/web.conf ubuntu@$(terraform output -raw web_server_ip):/var/www
+scp -i /.ssh/assignment-key3.pem -r /vagrant/admin.conf ubuntu@$(terraform output -raw admin_server_ip):/var/www
 
 
+echo "making the config file"
 #Grabbing the database details from terraform output and putting them into the config.php file.
 cat > /vagrant/config.php << EOF
 <?php
@@ -88,10 +111,12 @@ define('DB_PASS', '$(terraform output -raw db_pass)');
 ?>
 EOF
 
+echo "copying the config file"
 #Copying the config.php file to the web servers using secure copy.
-scp -i ~/.ssh/assignment-key.pem -r /vagrant/config.php ubuntu@$(terraform output -raw web_server_ip):/var/www
-scp -i ~/.ssh/assignment-key.pem -r /vagrant/config.php ubuntu@$(terraform output -raw admin_server_ip):/var/www
+scp -i /.ssh/assignment-key3.pem -r /vagrant/config.php ubuntu@$(terraform output -raw web_server_ip):/var/www
+scp -i /.ssh/assignment-key3.pem -r /vagrant/config.php ubuntu@$(terraform output -raw admin_server_ip):/var/www
 
+echo "restarting"
 #restarting the apache2 service on the web servers
-ssh -i ~/.ssh/assignment-key.pem ubuntu@$(terraform output -raw web_server_ip) "sudo systemctl restart apache2"
-ssh -i ~/.ssh/assignment-key.pem ubuntu@$(terraform output -raw admin_server_ip) "sudo systemctl restart apache2"
+ssh -i /.ssh/assignment-key3.pem ubuntu@$(terraform output -raw web_server_ip) "sudo systemctl restart apache2"
+ssh -i /.ssh/assignment-key3.pem ubuntu@$(terraform output -raw admin_server_ip) "sudo systemctl restart apache2"
