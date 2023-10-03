@@ -30,10 +30,30 @@ resource "aws_security_group" "allow_sshANDhttp" {
   }
 }
 
+resource "aws_security_group" "allow_mysql" {
+  name        = "allow_mysql"
+  description = "Allow inbound MySQL traffic"
+
+  ingress {
+    description = "MySQL from anywhere"
+    from_port   = 3306
+    to_port     = 3306
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
 resource "aws_instance" "web_server" {
   ami           = "ami-010e83f579f15bba0"
   instance_type = "t2.micro"
-  key_name      = "cosc349-2023"
+  key_name      = "assignment-key"
 
   vpc_security_group_ids = [aws_security_group.allow_sshANDhttp.id]
 
@@ -53,7 +73,7 @@ resource "aws_instance" "web_server" {
 resource "aws_instance" "Admin_server" {
     ami           = "ami-010e83f579f15bba0"
     instance_type = "t2.micro"
-    key_name      = "cosc349-2023"
+    key_name      = "assignment-key"
     
     vpc_security_group_ids = [aws_security_group.allow_sshANDhttp.id]
     
@@ -85,3 +105,32 @@ resource "aws_db_instance" "LollystoreDB" {
 output "web_server_ip" {
   value = aws_instance.web_server.public_ip
 }
+output "admin_server_ip" {
+  value = aws_instance.Admin_server.public_ip
+}
+output "db_server_ip" {
+  value = aws_db_instance.db_server.address
+}
+
+output "db_host" {
+  value = aws_db_instance.LollystoreDB.endpoint
+}
+
+output "db_port" {
+  value = aws_db_instance.LollystoreDB.port
+}
+
+output "db_name" {
+  value = aws_db_instance.LollystoreDB.name
+}
+
+output "db_user" {
+  value = aws_db_instance.LollystoreDB.username
+}
+
+output "db_pass" {
+  value = aws_db_instance.LollystoreDB.password
+}
+
+
+```
