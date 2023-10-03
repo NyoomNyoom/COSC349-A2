@@ -2,14 +2,22 @@ provider "aws" {
   region = "us-east-1"
 } 
 
-resource "aws_security_group" "allow_sshAnywhere" {
-  name        = "allow_sshAnywhere"
+resource "aws_security_group" "allow_sshANDhttp" {
+  name        = "allow_sshANDhttp"
   description = "Allow inbound SSH traffic"
 
   ingress {
     description = "SSH from anywhere"
     from_port   = 22
     to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    description = "HTTP"
+    from_port   = 80
+    to_port     = 80
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -27,7 +35,7 @@ resource "aws_instance" "web_server" {
   instance_type = "t2.micro"
   key_name      = "cosc349-2023"
 
-  vpc_security_group_ids = [aws_security_group.allow_sshAnywhere.id]
+  vpc_security_group_ids = [aws_security_group.allow_sshANDhttp.id]
 
   user_data = <<-EOF
               #!/bin/bash
@@ -47,7 +55,7 @@ resource "aws_instance" "Admin_server" {
     instance_type = "t2.micro"
     key_name      = "cosc349-2023"
     
-    vpc_security_group_ids = [aws_security_group.allow_sshAnywhere.id]
+    vpc_security_group_ids = [aws_security_group.allow_sshANDhttp.id]
     
     user_data = <<-EOF
                 #!/bin/bash
