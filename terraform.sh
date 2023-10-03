@@ -23,3 +23,9 @@ cp /vagrant/credentials.txt ~/.aws/credentials
 cd /vagrant/tf-deploy
 terraform init
 terraform apply -auto-approve
+
+#Copying the private key to the vagrant user
+cp /vagrant/assignment-key.pem ~/.ssh/assignment-key.pem
+
+#Setting up the private key to be used by the vagrant user
+chmod 700 ~/.ssh/assignment-key.pem
