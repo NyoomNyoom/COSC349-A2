@@ -63,6 +63,8 @@ resource "aws_instance" "web_server" {
               sudo apt install -y apache2
               sudo systemctl start apache2
               sudo systemctl enable apache2
+              sudo apt install -y install php
+              sudo apt-get install -y php-mysql
               EOF
 
   tags = {
@@ -83,6 +85,8 @@ resource "aws_instance" "Admin_server" {
                 sudo apt install -y apache2
                 sudo systemctl start apache2
                 sudo systemctl enable apache2
+                sudo apt install -y install php
+                sudo apt-get install -y php-mysql
                 EOF
     
     tags = {
@@ -103,6 +107,23 @@ resource "aws_db_instance" "LollystoreDB" {
     db_name              = "LollyStore"
     publicly_accessible = true
     skip_final_snapshot = true
+}
+
+resource "aws_s3_bucket" "web_backup_bucket" {
+  bucket = "jnorth-web-backup-bucket-name"
+  acl    = "private"
+}
+
+resource "aws_s3_bucket_object" "store_web_files" {
+  bucket       = aws_s3_bucket.web_backup_bucket.id
+  key          = "web-files/"
+  source       = "/vagrant/store-web-files"
+}
+
+resource "aws_s3_bucket_object" "admin_web_files" {
+  bucket       = aws_s3_bucket.web_backup_bucket.id
+  key          = "web-files/"
+  source       = "/vagrant/admin-web-files"
 }
 
 output "web_server_ip" {

@@ -6,10 +6,12 @@
 
     <body>
         <?php
-            $serverIP = '192.168.56.12';
-            $dbName = 'lollystoredb';
-            $dbUser = 'lollystore';
-            $dbPass = 'insecure_db_pw';
+            require_once 'config.php';
+
+            $serverIP = DB_HOST;
+            $dbName = DB_NAME;
+            $dbUser = DB_USER;
+            $dbPass = DB_PASSWORD;
 
             $pdo_dsn = "mysql:host=$serverIP;dbname=$dbName";
 

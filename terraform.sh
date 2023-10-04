@@ -36,6 +36,9 @@ chmod 700 /.ssh/assignment-key.pem
 
 cd /vagrant/tf-deploy
 echo "making the ubuntu user own the /var/www folder"
+ssh -i /.ssh/assignment-key.pem -o StrictHostKeyChecking=no ubuntu@$(terraform output -raw web_server_ip) "sudo mkdir /var/www"
+ssh -i /.ssh/assignment-key.pem -o StrictHostKeyChecking=no ubuntu@$(terraform output -raw admin_server_ip) "sudo mkdir /var/www"
+
 ssh -i /.ssh/assignment-key.pem -o StrictHostKeyChecking=no ubuntu@$(terraform output -raw web_server_ip) "sudo chown -R ubuntu:root /var/www"
 ssh -i /.ssh/assignment-key.pem -o StrictHostKeyChecking=no ubuntu@$(terraform output -raw admin_server_ip) "sudo chown -R ubuntu:root /var/www"
 
@@ -111,7 +114,7 @@ define('DB_PASS', '$(terraform output -raw db_pass)');
 ?>
 EOF
 
-echo "copying the config file"
+echo "copying the config files"
 #Copying the config.php file to the web servers using secure copy.
 scp -i /.ssh/assignment-key.pem -r /vagrant/config.php ubuntu@$(terraform output -raw web_server_ip):/var/www/store-web-files
 scp -i /.ssh/assignment-key.pem -r /vagrant/config.php ubuntu@$(terraform output -raw admin_server_ip):/var/www/admin-web-files
