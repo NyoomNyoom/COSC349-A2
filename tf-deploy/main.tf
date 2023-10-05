@@ -63,7 +63,7 @@ resource "aws_instance" "web_server" {
               sudo apt install -y apache2
               sudo systemctl start apache2
               sudo systemctl enable apache2
-              sudo apt install -y install php
+              sudo apt install -y php
               sudo apt-get install -y php-mysql
               EOF
 
@@ -85,7 +85,7 @@ resource "aws_instance" "Admin_server" {
                 sudo apt install -y apache2
                 sudo systemctl start apache2
                 sudo systemctl enable apache2
-                sudo apt install -y install php
+                sudo apt install -y php
                 sudo apt-get install -y php-mysql
                 EOF
     
