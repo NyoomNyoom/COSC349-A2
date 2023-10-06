@@ -12,3 +12,8 @@ This is my repository holding all the code base for my assignment 2. Below will 
 ```PASS: password```. These can be changed in ```/Cloned repo/tf-deploy/main.tf```
 
 **Warning** If you are trying to use the VM to run more code or change the configuration, after a couple of hours you will need to replace your AWS API credentials in the file ```~/.aws/credentials``` on the vm as it can time out and stop being valid. A way you could go about this would be replacing the credentials on your host system in the cloned repository into the file ```credentials.txt``` like you did at the start of step 2. Then run ```vagrant ssh``` in the shell where you ran ```vagrant up``` and run the following command ```cp /vagrant/credentials.txt ~/.aws/credentials```. This will update your credentials and mean you can continue to use terraform without issues :)
+
+## My running versions
+The EC2 machines that I will be running as examples are accessible from the links below:
+[Admin web server](http://ec2-54-224-48-122.compute-1.amazonaws.com)
+[Store web server](http://ec2-18-234-151-142.compute-1.amazonaws.com)
