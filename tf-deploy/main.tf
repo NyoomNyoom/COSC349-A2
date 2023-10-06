@@ -112,7 +112,7 @@ resource "aws_db_instance" "LollystoreDB" {
 }
 
 resource "aws_s3_bucket" "web_backup_bucket" {
-  bucket = "jnorth-web-backup-bucket-name"
+  bucket = "jnorth-web-backup"
   acl    = "private"
 }
 
