@@ -11,7 +11,7 @@
             <br>
             <p> <a href="admin.php">Back to admin page</a> </p>
             <?php
-                require_once '/var/www/store-web-files/config.php';
+                require_once '/var/www/admin-web-files/config.php';
 
                 $serverIP = DB_HOST;
                 $dbName = DB_NAME;
