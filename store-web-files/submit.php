@@ -9,18 +9,19 @@
         <center>
             <h1>Order Recieved</h1>
             <?php
-                require_once 'config.php';
+                require_once '/var/www/store-web-files/config.php';
 
-                $serverIP = 'terraform-20231003084332632900000003.clsautq0toao.us-east-1.rds.amazonaws.com';
-                $dbName = 'LollyStore';
-                $dbUser = 'admin';
-                $dbPass = 'password';
+                $serverIP = DB_HOST;
+                $dbName = DB_NAME;
+                $dbUser = DB_USER;
+                $dbPass = DB_PASS;
+
+                $test = DB_NAME;
 
                 echo "<p>Server IP: $serverIP</p>";
                 echo "<p>Database Name: $dbName</p>";
                 echo "<p>Database User: $dbUser</p>";
                 echo "<p>Database Password: $dbPass</p>";
-                echo "<p>Trying to connect</p>";
 
                 // This is the data source name or DSN.
                 $pdo_dsn = "mysql:host=$serverIP;dbname=$dbName";

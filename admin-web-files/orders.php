@@ -11,10 +11,19 @@
             <br>
             <p> <a href="admin.php">Back to admin page</a> </p>
             <?php
-                $serverIP = '192.168.56.12';
-                $dbName = 'lollystoredb';
-                $dbUser = 'lollystore';
-                $dbPass = 'insecure_db_pw';
+                require_once '/var/www/store-web-files/config.php';
+
+                $serverIP = DB_HOST;
+                $dbName = DB_NAME;
+                $dbUser = DB_USER;
+                $dbPass = DB_PASS;
+
+                $test = DB_NAME;
+
+                echo "<p>Server IP: $serverIP</p>";
+                echo "<p>Database Name: $dbName</p>";
+                echo "<p>Database User: $dbUser</p>";
+                echo "<p>Database Password: $dbPass</p>";
 
                 $pdo_dsn = "mysql:host=$serverIP;dbname=$dbName";
 

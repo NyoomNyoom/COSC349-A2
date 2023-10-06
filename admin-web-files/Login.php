@@ -6,7 +6,7 @@
 
     <body>
         <?php
-            require_once 'config.php';
+            require_once '/var/www/store-web-files/config.php';
 
             $serverIP = DB_HOST;
             $dbName = DB_NAME;
