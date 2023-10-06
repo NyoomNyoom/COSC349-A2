@@ -15,5 +15,7 @@ This is my repository holding all the code base for my assignment 2. Below will 
 
 ## My running versions
 The EC2 machines that I will be running as examples are accessible from the links below:
+
 [Admin web server](http://ec2-54-224-48-122.compute-1.amazonaws.com)
+
 [Store web server](http://ec2-18-234-151-142.compute-1.amazonaws.com)
