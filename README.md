@@ -9,4 +9,7 @@ This is my repository holding all the code base for my assignment 2. Below will 
 5. Then if you go into your AWS learner lab and click on EC2 and then "Running instances" you should see two running instances, one will be called "Customer website" and the other will be called "Admin website". If you navigate to the website you would like to open, and then....
 
 
+also for ssh and remote use of vms command ``` ssh -i /.ssh/assignment-key.pem ubuntu@$(terraform output -raw web_server_ip) ``` while in the /vagrant/tf-deploy directory on vagrant ssh
+
+
 **Warning** If you are trying to use the VM to run more code or change the configuration, after a couple of hours you will need to replace your AWS API credentials in the file ```~/.aws/credentials``` on the vm as it can time out and stop being valid. A way you could go about this would be replacing the credentials on your host system in the cloned repository into the file ```credentials.txt``` like you did at the start of step 2. Then run ```vagrant ssh``` in the shell where you ran ```vagrant up``` and run the following command ```cp /vagrant/credentials.txt ~/.aws/credentials```. This will update your credentials and mean you can continue to use terraform without issues :)
