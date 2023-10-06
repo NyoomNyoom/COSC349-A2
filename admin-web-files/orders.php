@@ -18,13 +18,6 @@
                 $dbUser = DB_USER;
                 $dbPass = DB_PASS;
 
-                $test = DB_NAME;
-
-                echo "<p>Server IP: $serverIP</p>";
-                echo "<p>Database Name: $dbName</p>";
-                echo "<p>Database User: $dbUser</p>";
-                echo "<p>Database Password: $dbPass</p>";
-
                 $pdo_dsn = "mysql:host=$serverIP;dbname=$dbName";
 
                 try {
