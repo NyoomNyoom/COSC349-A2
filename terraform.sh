@@ -111,6 +111,8 @@ define('DB_PORT', '$(terraform output -raw db_port)');
 define('DB_NAME', '$(terraform output -raw db_name)');
 define('DB_USER', '$(terraform output -raw db_user)');
 define('DB_PASS', '$(terraform output -raw db_pass)');
+define('STORE_URL', 'http://$(terraform output -raw web_server_ip)');
+define('ADMIN_URL', 'http://$(terraform output -raw admin_server_ip)');
 ?>
 EOF
 
