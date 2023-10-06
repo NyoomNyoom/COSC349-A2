@@ -65,6 +65,7 @@ resource "aws_instance" "web_server" {
               sudo systemctl enable apache2
               sudo apt install -y php
               sudo apt-get install -y php-mysql
+              sudo apt install -y mysql-server
               EOF
 
   tags = {
@@ -87,6 +88,7 @@ resource "aws_instance" "Admin_server" {
                 sudo systemctl enable apache2
                 sudo apt install -y php
                 sudo apt-get install -y php-mysql
+                sudo apt install -y mysql-server
                 EOF
     
     tags = {
@@ -117,13 +119,13 @@ resource "aws_s3_bucket" "web_backup_bucket" {
 resource "aws_s3_bucket_object" "store_web_files" {
   bucket       = aws_s3_bucket.web_backup_bucket.id
   key          = "web-files/"
-  source       = "/vagrant/store-web-files"
+  source       = "/vagrant/store-web-files/submit.php"
 }
 
 resource "aws_s3_bucket_object" "admin_web_files" {
   bucket       = aws_s3_bucket.web_backup_bucket.id
   key          = "web-files/"
-  source       = "/vagrant/admin-web-files"
+  source       = "/vagrant/admin-web-files/admin.php"
 }
 
 output "web_server_ip" {
