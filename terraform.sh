@@ -24,11 +24,11 @@ cd /vagrant/tf-deploy
 terraform init
 terraform apply -auto-approve
 
+#Making the following commands run as sudo user.
 sudo -s
 
-mkdir /.ssh
-
 #Copying the private key to the vagrant user
+mkdir /.ssh
 cp /vagrant/assignment-key.pem /.ssh/assignment-key.pem
 
 #Setting up the private key to be used by the vagrant user
@@ -49,9 +49,10 @@ scp -i /.ssh/assignment-key.pem -o StrictHostKeyChecking=no -r /vagrant/store-we
 scp -i /.ssh/assignment-key.pem -o StrictHostKeyChecking=no -r /vagrant/admin-web-files ubuntu@$(terraform output -raw admin_server_ip):/var/www
 
 #changing the directory back
-
 cd /vagrant
 
+
+#Creating the apache config files
 cat > /vagrant/web.conf << EOF
 <VirtualHost *:80>
     ServerAdmin webmaster@localhost
@@ -76,22 +77,27 @@ cat > /vagrant/admin.conf << EOF
 </VirtualHost>
 EOF
 
+#Just peace of mind directory changes :)
 cd /vagrant/tf-deploy
 
-#Copying the config files to the web servers using secure copy.
+echo "copying config files to web servers"
+#Copying the config files to the web servers using secure copy, and making the ubuntu user own the web apache2 directory
 ssh -i /.ssh/assignment-key.pem ubuntu@$(terraform output -raw web_server_ip) "sudo chown -R ubuntu:root /etc/apache2/sites-available"
 ssh -i /.ssh/assignment-key.pem ubuntu@$(terraform output -raw admin_server_ip) "sudo chown -R ubuntu:root /etc/apache2/sites-available"
 scp -i /.ssh/assignment-key.pem -r /vagrant/web.conf ubuntu@$(terraform output -raw web_server_ip):/etc/apache2/sites-available
 scp -i /.ssh/assignment-key.pem -r /vagrant/admin.conf ubuntu@$(terraform output -raw admin_server_ip):/etc/apache2/sites-available
 
+echo "Changing the ownership of the config files"
 #Changing the ownership of the config files on the web servers back to root.
 ssh -i /.ssh/assignment-key.pem ubuntu@$(terraform output -raw web_server_ip) "sudo chown -R root:ubuntu /etc/apache2/sites-available"
 ssh -i /.ssh/assignment-key.pem ubuntu@$(terraform output -raw admin_server_ip) "sudo chown -R root:ubuntu /etc/apache2/sites-available"
 
+echo "enabling the website config files"
 #enabling the config files on the web servers
 ssh -i /.ssh/assignment-key.pem ubuntu@$(terraform output -raw web_server_ip) "sudo a2ensite web.conf"
 ssh -i /.ssh/assignment-key.pem ubuntu@$(terraform output -raw admin_server_ip) "sudo a2ensite admin.conf"
 
+echo "disabling the default website files"
 #disabling the default config files on the web servers
 ssh -i /.ssh/assignment-key.pem ubuntu@$(terraform output -raw web_server_ip) "sudo a2dissite 000-default"
 ssh -i /.ssh/assignment-key.pem ubuntu@$(terraform output -raw admin_server_ip) "sudo a2dissite 000-default"
