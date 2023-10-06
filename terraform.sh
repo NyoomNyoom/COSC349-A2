@@ -48,7 +48,7 @@ echo "copying the files to the web servers"
 scp -i /.ssh/assignment-key.pem -o StrictHostKeyChecking=no -r /vagrant/store-web-files ubuntu@$(terraform output -raw web_server_ip):/var/www
 scp -i /.ssh/assignment-key.pem -o StrictHostKeyChecking=no -r /vagrant/admin-web-files ubuntu@$(terraform output -raw admin_server_ip):/var/www
 
-echo "after changes"
+#changing the directory back
 
 cd /vagrant
 
